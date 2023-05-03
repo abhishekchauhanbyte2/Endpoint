@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'my-spring-boot-app'
+        DOCKER_IMAGE = 'abhishekchauhannagarro/endpointapp:v1'
     }
     stages {
         stage('Build') {
