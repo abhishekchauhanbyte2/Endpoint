@@ -17,7 +17,10 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                   def dockerImage =  docker.build(DOCKER_IMAGE)
+                   def dockerImageCreated =  docker.build(DOCKER_IMAGE)
+                }
+                environment{
+                    dockerImage = dockerImageCreated
                 }
             }
         }
