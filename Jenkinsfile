@@ -14,27 +14,34 @@ pipeline {
                 }
             }
         }
-        stage('Docker build') {
+        stage('Docker build and push image') {
             steps {
-                script {
-                   def dockerImageCreated =  docker.build(DOCKER_IMAGE)
-                }
-                environment{
-                    dockerImage = dockerImageCreated
-                }
-            }
-        }
-        stage('Docker push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
                     script {
-                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
-                            dockerImage.push()
+                       def dockerImage =  docker.build(DOCKER_IMAGE)
+                       docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                             dockerImage.push()
                         }
                     }
                 }
             }
+            post{
+                success {
+                    echo "successfully pushed image"        
+                }
+                }
         }
+//         stage('Docker push') {
+//             steps {
+//                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+//                     script {
+//                         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+//                             dockerImage.push()
+//                         }
+//                     }
+//                 }
+//             }
+//         }
         stage('Deploy') {
             when {
                 branch 'main'
