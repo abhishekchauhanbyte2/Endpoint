@@ -41,7 +41,7 @@ pipeline {
                             sh "docker stop ${DOCKER_IMAGE} || true"
                             sh "docker rm ${DOCKER_IMAGE} || true"
                             sh "docker pull ${DOCKER_IMAGE}"
-                            sh "docker run -d --name ${DOCKER_IMAGE} -p 8761:8761 ${DOCKER_IMAGE}"
+                            sh "docker run -d -p 8761:8761 ${DOCKER_IMAGE}"
                         }
                     }
                 }
